@@ -4,7 +4,7 @@ import plotly.express as px
 
 from nltk.sentiment import SentimentIntensityAnalyzer
 
-filepaths = glob.glob("diary/*.txt")
+filepaths = sorted(glob.glob("diary/*.txt"))
 
 analyzer = SentimentIntensityAnalyzer()
 
@@ -17,8 +17,21 @@ for filepath in filepaths:
     positivity.append(scores["pos"])
     negativity.append(scores["neg"])
 
-dates = [name.strip(".txt").strip("diary/") for name in filepaths]
+#dates = [name.strip(".txt").strip("diary/") for name in filepaths]
+dates = [name.strip("diary\\").strip(".txt") for name in filepaths]
 
 print(scores)
 print(negativity)
 print(positivity)
+print(dates)
+
+st.title("Diary Tone")
+st.subheader("Positivity")
+pos_figure = px.line(x=dates, y=positivity,
+                     labels={"x": "Date", "y": "Positivity"})
+st.plotly_chart(pos_figure)
+
+st.subheader("Negativity")
+neg_figure = px.line(x=dates, y=negativity,
+                     labels={"x": "Date", "y": "Negativity"})
+st.plotly_chart(neg_figure)
